@@ -74,6 +74,23 @@ const displayMovements = function (movements) {
   });
 };
 displayMovements(account1.movements);
+const createUsernames = function (accs) {
+  accs.forEach(function (acc) {
+    acc.username = acc.owner
+      .toLowerCase()
+      .split(' ')
+      .map(name => name[0])
+      .join('');
+  });
+};
+const calcDisplayBalance = function (movements) {
+  const balance = movements.reduce((acc, curr) => acc + curr, 0);
+  labelBalance.textContent = `${balance} EUR`;
+};
+calcDisplayBalance(account1.movements);
+
+// console.log(createUsernames(accounts));
+// console.log(accounts);
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 // LECTURES
@@ -84,7 +101,7 @@ displayMovements(account1.movements);
 //   ['GBP', 'Pound sterling'],
 // ]);
 
-// const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
 /////////////////////////////////////////////////
 
@@ -150,7 +167,8 @@ const currencies = new Map([
 // currenciesUnique.forEach(function (value, key, map) {
 //   console.log(`${key}: ${value}`);
 // });
-const kate1 = [4, 1, 15, 8, 3];
+//TODO CHALLENGE
+const kate1 = [5, 2, 4, 1, 15, 8, 3];
 const kate2 = [10, 5, 6, 1, 4];
 const julia1 = [3, 5, 2, 12, 7];
 const julia2 = [9, 16, 6, 8, 3];
@@ -168,5 +186,34 @@ const checkDogs = function (kate, julia) {
     );
   });
 };
-checkDogs(kate1, julia1);
-checkDogs(kate2, julia2);
+// checkDogs(kate1, julia1);
+// checkDogs(kate2, julia2);
+
+const calcAverageHumanAge = function (ages) {
+  const humanAge = ages
+    .map(age => {
+      if (age <= 2) {
+        return age * 2;
+      } else {
+        return 16 + age * 4;
+      }
+    })
+    .filter(age => age >= 18)
+    .reduce((acc, curr, i, Arr) => acc + curr / Arr.length, 0);
+  return humanAge;
+};
+console.log(calcAverageHumanAge(kate1));
+console.log(calcAverageHumanAge(kate2));
+console.log(calcAverageHumanAge(julia1));
+console.log(calcAverageHumanAge(julia2));
+//IDEA MAP functions:
+//const eurToUSD = 1.1;
+//const movementstoUSD = movements.map(mov => mov * eurToUSD);
+//IDEA Filter shr7:
+//const deposits = movements.filter(mov => mov > 0);
+//console.log(deposits);
+//const withdrawals = movements.filter(mov => mov < 0);
+//console.log(withdrawals);
+//IDEA Reduce :
+//const balance = movements.reduce((acc, curr) => acc + curr, 0);
+//console.log(balance);
