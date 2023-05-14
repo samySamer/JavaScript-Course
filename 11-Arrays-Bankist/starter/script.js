@@ -68,7 +68,7 @@ const displayMovements = function (movements) {
         <div class="movements__type movements__type--${type}">${
       i + 1
     } ${type} </div>
-        <div class="movements__value">${mov}</div>
+        <div class="movements__value">${mov}€</div>
     </div>`;
     containerMovements.insertAdjacentHTML('afterbegin', html);
   });
@@ -85,10 +85,27 @@ const createUsernames = function (accs) {
 };
 const calcDisplayBalance = function (movements) {
   const balance = movements.reduce((acc, curr) => acc + curr, 0);
-  labelBalance.textContent = `${balance} EUR`;
+  labelBalance.textContent = `${balance}€`;
 };
 calcDisplayBalance(account1.movements);
+const calcDisplaySummary = function (movements) {
+  const incomes = movements
+    .filter(mov => mov > 0)
+    .reduce((acc, curr) => acc + curr, 0);
+  labelSumIn.textContent = `${incomes}€`;
 
+  const out = movements
+    .filter(mov => mov < 0)
+    .reduce((acc, curr) => acc + curr, 0);
+  labelSumOut.textContent = `${Math.abs(out)}€`;
+  const interest = movements
+    .filter(mov => mov > 0)
+    .map(mov => (mov * 1.2) / 100)
+    .filter(mov => mov >= 1)
+    .reduce((acc, mov) => acc + mov, 0);
+  labelSumInterest.textContent = `${interest}€`;
+};
+calcDisplaySummary(account1.movements);
 // console.log(createUsernames(accounts));
 // console.log(accounts);
 /////////////////////////////////////////////////
@@ -189,19 +206,11 @@ const checkDogs = function (kate, julia) {
 // checkDogs(kate1, julia1);
 // checkDogs(kate2, julia2);
 
-const calcAverageHumanAge = function (ages) {
-  const humanAge = ages
-    .map(age => {
-      if (age <= 2) {
-        return age * 2;
-      } else {
-        return 16 + age * 4;
-      }
-    })
+const calcAverageHumanAge = ages =>
+  ages
+    .map(age => (age <= 2 ? age * 2 : 16 + age * 4))
     .filter(age => age >= 18)
     .reduce((acc, curr, i, Arr) => acc + curr / Arr.length, 0);
-  return humanAge;
-};
 console.log(calcAverageHumanAge(kate1));
 console.log(calcAverageHumanAge(kate2));
 console.log(calcAverageHumanAge(julia1));
@@ -217,3 +226,16 @@ console.log(calcAverageHumanAge(julia2));
 //IDEA Reduce :
 //const balance = movements.reduce((acc, curr) => acc + curr, 0);
 //console.log(balance);
+// const eurToUSD = 1.1;
+// const totalDeposit
+
+//IDEA Find METHOD:Another Method that loops through the array finding the first element that accept the condition and retrieve it.
+const firstWithDrawal = movements.find(mov => mov < 0);
+//IDEA we Can also find an object or item from array and this is where it really shines!
+const account = accounts.find(acc => acc.owner === 'Jessica Davis');
+console.log(account);
+let acc;
+for (let account of accounts) {
+  if (account.owner === 'Jessica Davis') acc = account;
+}
+console.log(acc);
