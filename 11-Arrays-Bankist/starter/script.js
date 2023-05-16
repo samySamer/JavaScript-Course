@@ -83,30 +83,57 @@ const createUsernames = function (accs) {
       .join('');
   });
 };
+
 const calcDisplayBalance = function (movements) {
   const balance = movements.reduce((acc, curr) => acc + curr, 0);
   labelBalance.textContent = `${balance}€`;
 };
-calcDisplayBalance(account1.movements);
-const calcDisplaySummary = function (movements) {
-  const incomes = movements
+const calcDisplaySummary = function (account) {
+  const incomes = account.movements
     .filter(mov => mov > 0)
     .reduce((acc, curr) => acc + curr, 0);
   labelSumIn.textContent = `${incomes}€`;
 
-  const out = movements
+  const out = account.movements
     .filter(mov => mov < 0)
     .reduce((acc, curr) => acc + curr, 0);
   labelSumOut.textContent = `${Math.abs(out)}€`;
-  const interest = movements
+  const interest = account.movements
     .filter(mov => mov > 0)
-    .map(mov => (mov * 1.2) / 100)
+    .map(mov => (mov * account.interestRate) / 100)
     .filter(mov => mov >= 1)
     .reduce((acc, mov) => acc + mov, 0);
   labelSumInterest.textContent = `${interest}€`;
 };
-calcDisplaySummary(account1.movements);
-// console.log(createUsernames(accounts));
+createUsernames(accounts);
+
+//TODO EVENT HANDLERS:
+let CurrentAccount;
+btnLogin.addEventListener('click', function (e) {
+  //Prevent Form from submitting
+  e.preventDefault();
+  CurrentAccount = accounts.find(
+    acc => acc.username === inputLoginUsername.value
+  );
+  if (CurrentAccount?.pin === Number(inputLoginPin.value)) {
+    //Display UI and a welcome message
+    labelWelcome.textContent = `Welcome Back, ${
+      CurrentAccount.owner.split(' ')[0]
+    }`;
+    containerApp.style.opacity = 100;
+    //Clear Input Fields:
+    inputLoginUsername.value = inputLoginPin.value = '';
+    //Makes it Lose its focus
+    inputLoginPin.blur();
+    //Display Movements
+    displayMovements(CurrentAccount.movements);
+
+    //Display Balance
+    calcDisplayBalance(CurrentAccount.movements);
+    //Display Summary
+    calcDisplaySummary(CurrentAccount);
+  }
+});
 // console.log(accounts);
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
@@ -232,10 +259,10 @@ console.log(calcAverageHumanAge(julia2));
 //IDEA Find METHOD:Another Method that loops through the array finding the first element that accept the condition and retrieve it.
 const firstWithDrawal = movements.find(mov => mov < 0);
 //IDEA we Can also find an object or item from array and this is where it really shines!
-const account = accounts.find(acc => acc.owner === 'Jessica Davis');
-console.log(account);
-let acc;
-for (let account of accounts) {
-  if (account.owner === 'Jessica Davis') acc = account;
-}
-console.log(acc);
+// const account = accounts.find(acc => acc.owner === 'Jessica Davis');
+// console.log(account);
+// let acc;
+// for (let account of accounts) {
+//   if (account.owner === 'Jessica Davis') acc = account;
+// }
+//console.log(acc);
