@@ -120,6 +120,7 @@ let CurrentAccount;
 btnLogin.addEventListener('click', function (e) {
   //Prevent Form from submitting
   e.preventDefault();
+
   CurrentAccount = accounts.find(
     acc => acc.username === inputLoginUsername.value
   );
@@ -138,7 +139,22 @@ btnLogin.addEventListener('click', function (e) {
     UpdateUi(CurrentAccount);
   }
 });
-
+btnClose.addEventListener('click', function (e) {
+  e.preventDefault();
+  if (
+    inputCloseUsername.value === CurrentAccount.username &&
+    Number(inputClosePin.value) === CurrentAccount.pin
+  ) {
+    const index = accounts.findIndex(
+      acc => acc.username === CurrentAccount.username
+    );
+    //Delete Account
+    accounts.splice(index, 1);
+    //Hide UI
+    containerApp.style.opacity = 0;
+  }
+  inputCloseUsername.value = inputClosePin.value = '';
+});
 btnTransfer.addEventListener('click', function (e) {
   e.preventDefault();
 
