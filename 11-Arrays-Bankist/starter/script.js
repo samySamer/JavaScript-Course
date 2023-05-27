@@ -59,9 +59,10 @@ const inputTransferAmount = document.querySelector('.form__input--amount');
 const inputLoanAmount = document.querySelector('.form__input--loan-amount');
 const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
-const displayMovements = function (movements) {
+const displayMovements = function (movements, sort = false) {
   containerMovements.innerHTML = '';
-  movements.forEach(function (mov, i) {
+  const movs = sort ? movements.slice().sort((a, b) => a - b) : movements;
+  movs.forEach(function (mov, i) {
     const type = mov > 0 ? 'deposit' : 'withdrawal';
     const html = `   
       <div class="movements__row">
@@ -83,6 +84,7 @@ const createUsernames = function (accs) {
       .join('');
   });
 };
+let sorted = false;
 
 const calcDisplayBalance = function (acc) {
   acc.balance = acc.movements.reduce((acc, curr) => acc + curr, 0);
@@ -117,6 +119,15 @@ const UpdateUi = function (acc) {
 };
 //TODO EVENT HANDLERS:
 let CurrentAccount;
+btnLoan.addEventListener('click', function (e) {
+  e.preventDefault();
+  const amount = Number(inputLoanAmount.value);
+  if (amount > 0 && CurrentAccount.movements.some(mov => mov >= amount * 0.1))
+    CurrentAccount.movements.push(amount);
+
+  UpdateUi(CurrentAccount);
+  inputLoanAmount.value = '';
+});
 btnLogin.addEventListener('click', function (e) {
   //Prevent Form from submitting
   e.preventDefault();
@@ -173,6 +184,11 @@ btnTransfer.addEventListener('click', function (e) {
     recieverAcc.movements.push(amount);
     UpdateUi(CurrentAccount);
   }
+});
+btnSort.addEventListener('click', function (e) {
+  e.preventDefault();
+  displayMovements(CurrentAccount.movements, !sorted);
+  sorted = !sorted;
 });
 
 // console.log(accounts);
@@ -307,3 +323,12 @@ const firstWithDrawal = movements.find(mov => mov < 0);
 //   if (account.owner === 'Jessica Davis') acc = account;
 // }
 //console.log(acc);
+//IDEA Flat: It turns any  n level nested arrays into 1D arrays.
+// it takes a parameter as the depth of turning arrays
+// const DeepArr = [[1, 2, 3], 1, 2, [1, 2, 3, [4, 5]]];
+// console.log(DeepArr.flat(2));
+//IDEA FlatMap: its a map and flat in one function but it moves 1 lvl deep only !
+const overallbalance = accounts
+  .flatMap(acc => acc.movements)
+  .reduce((mov, curr) => curr + mov, 0);
+console.log(overallbalance);
