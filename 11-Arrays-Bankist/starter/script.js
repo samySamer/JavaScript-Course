@@ -328,7 +328,68 @@ const firstWithDrawal = movements.find(mov => mov < 0);
 // const DeepArr = [[1, 2, 3], 1, 2, [1, 2, 3, [4, 5]]];
 // console.log(DeepArr.flat(2));
 //IDEA FlatMap: its a map and flat in one function but it moves 1 lvl deep only !
-const overallbalance = accounts
-  .flatMap(acc => acc.movements)
-  .reduce((mov, curr) => curr + mov, 0);
-console.log(overallbalance);
+// const overallbalance = accounts
+//   .flatMap(acc => acc.movements)
+//   .reduce((mov, curr) => curr + mov, 0);
+// console.log(overallbalance);
+
+// //Assigning arrays with functions
+// const arr = Array.from({ length: 100 }, () => parseInt(Math.random() * 6 + 1));
+// console.log(arr);
+// labelBalance.addEventListener('click', () => {
+//   const MovementsUi = Array.from(
+//     document.querySelectorAll('.movements__value'),
+//     el => Number(el.textContent.replace('€', ''))
+//   );
+//   console.log(MovementsUi);
+// });
+
+const dogs = [
+  { weight: 22, curFood: 250, owners: ['Alice', 'Bob'] },
+  { weight: 8, curFood: 200, owners: ['Matilda'] },
+  { weight: 13, curFood: 275, owners: ['Sarah', 'John'] },
+  { weight: 32, curFood: 340, owners: ['Michael'] },
+];
+let dogEats = `This dog eats too `;
+dogs.forEach(
+  dog => (dog.recommendedFood = Math.trunc(dog.weight ** 0.75 * 28))
+);
+// let SaraDog = dogs.forEach(dog => dog.owners.flat().find('Sarah'));
+dogs.forEach(dog => {
+  if (dog.owners.flat().includes('Sarah')) {
+    if (dog.curFood < 0.9 * dog.recommendedFood) dogEats += `Little`;
+    else if (dog.curFood > 1.1 * dog.recommendedFood);
+    dogEats += `Much`;
+  }
+});
+console.log(dogEats);
+let ownersEatTooMuch = dogs
+  .filter(dog => dog.curFood > 1.1 * dog.recommendedFood)
+  .map(dog => dog.owners);
+let ownerEatsTooLittle = dogs
+  .filter(dog => dog.curFood < 0.9 * dog.recommendedFood)
+  .map(dog => dog.owners);
+console.log(ownerEatsTooLittle);
+console.log(ownersEatTooMuch);
+console.log(`${ownersEatTooMuch.flat().join(' and ')}'s dogs Eat Too much`);
+console.log(`${ownerEatsTooLittle.flat().join(' and ')}'s dogs Eat Too Little`);
+console.log(dogs.some(dog => dog.curFood === dog.recommendedFood));
+console.log(
+  dogs.some(
+    dog =>
+      dog.curFood > dog.recommendedFood * 0.9 &&
+      dog.curFood < dog.recommendedFood * 1.1
+  )
+);
+let DogsEatGood = dogs.filter(
+  dog =>
+    dog.curFood > dog.recommendedFood * 0.9 &&
+    dog.curFood < dog.recommendedFood * 1.1
+);
+let SortedDogs = [...dogs].sort(
+  (a, b) => a.recommendedFood - b.recommendedFood
+);
+console.log(DogsEatGood);
+console.log(SortedDogs);
+// console.log(SaraDog);
+console.log(dogs);
