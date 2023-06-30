@@ -134,7 +134,7 @@ const RevealingObserver = new IntersectionObserver(RevealFunction, {
 });
 allSections.forEach(section => {
   RevealingObserver.observe(section);
-  section.classList.add('section--hidden');
+  // section.classList.add('section--hidden');
 });
 
 /////////////////////////////////////////
@@ -155,3 +155,73 @@ const ImgObserver = new IntersectionObserver(loadImg, {
   rootMargin: '200px',
 });
 targetImg.forEach(img => ImgObserver.observe(img));
+
+/////////////////////////////////////////
+//Slider:
+const slider = function () {
+  //variables:
+  const slidingImgs = document.querySelectorAll('.slide');
+  const leftSLider = document.querySelector('.slider__btn--left');
+  const rightSlider = document.querySelector('.slider__btn--right');
+  let currSlider = 0;
+  let maxSlider = slidingImgs.length;
+  const dotsContainer = document.querySelector('.dots');
+
+  //Functions
+  const init = function () {
+    goToSlider(0);
+    createDots();
+    activateDots(0);
+  };
+  const createDots = function () {
+    slidingImgs.forEach((_, i) => {
+      dotsContainer.insertAdjacentHTML(
+        'beforeend',
+        `<button class="dots__dot" data-slide="${i}"></button>`
+      );
+    });
+  };
+  const activateDots = function (slides) {
+    document
+      .querySelectorAll('.dots__dot')
+      .forEach(dot => dot.classList.remove('dots__dot--active'));
+    const activeDot = document
+      .querySelector(`.dots__dot[data-slide="${slides}"]`)
+      .classList.add('dots__dot--active');
+  };
+
+  const goToSlider = function (slide) {
+    slidingImgs.forEach((s, i) => {
+      s.style.transform = `translateX(${100 * (i - slide)}%)`;
+    });
+  };
+  const nextSlide = function () {
+    if (currSlider === maxSlider - 1) currSlider = 0;
+    else currSlider++;
+    goToSlider(currSlider);
+    activateDots(currSlider);
+  };
+  const prevSlide = function () {
+    if (currSlider === 0) currSlider = maxSlider - 1;
+    else currSlider--;
+    goToSlider(currSlider);
+    activateDots(currSlider);
+  };
+  init();
+  rightSlider.addEventListener('click', nextSlide);
+  leftSLider.addEventListener('click', prevSlide);
+  document.addEventListener('keydown', function (e) {
+    e.key === 'ArrowLeft' && prevSlide();
+    e.key === 'ArrowRight' && nextSlide();
+  });
+  dotsContainer.addEventListener('click', e => {
+    if (e.target.classList.contains('dots__dot')) {
+      const { slide } = e.target.dataset; //this line = to
+      //IDEA this line : const slide = e.target.dataset.slide;
+      goToSlider(slide);
+      console.log(slide);
+      activateDots(slide);
+    }
+  });
+};
+slider();
